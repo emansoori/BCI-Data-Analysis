@@ -2,8 +2,9 @@ import mne
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import welch
+from circos import CircosPlot
 
-Data = mne.io.read_epochs_eeglab('E:\DATA Hadi\Data\Data\Recordings\Phase 1\PreProcessedData\P3\P3.set')
+Data = mne.io.read_epochs_eeglab('D:\Data\Recordings\Phase 1\PreProcessedData\P3\P3.set')
 
 df = Data.to_data_frame()
 
@@ -25,7 +26,7 @@ plt.legend()
 
 
 plt.tight_layout()
-plt.show()
+
 
 
 plt.figure(figsize=(10, 6))
@@ -40,6 +41,17 @@ plt.xlabel('Frequency (Hz)')
 plt.ylabel('Power/Frequency (dB/Hz)')
 plt.title('Power Spectral Density (PSD) - Welch Method')
 plt.legend()
+
+
+mean_f7 = np.mean(F7_Electrode[:, 0])
+std_f7 = np.std(F7_Electrode[:, 0])
+
+mean_t4 = np.mean(T4_Electrode[:, 0])
+std_t4 = np.std(T4_Electrode[:, 0])
+
+print(f'Mean and Standard Deviation for F7: {mean_f7}, {std_f7}')
+print(f'Mean and Standard Deviation for T4: {mean_t4}, {std_t4}')
+
 
 plt.tight_layout()
 plt.show()
