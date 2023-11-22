@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 from scipy.signal import welch
 
 Data = mne.io.read_epochs_eeglab('D:\Data\Recordings\Phase 1\PreProcessedData\P3\P3.set')
-
 df = Data.to_data_frame()
 
 F7_Electrode = df[df.columns[10:11]].to_numpy()[:1123]
@@ -42,31 +41,46 @@ print(f'Mean and Standard Deviation for T4: {mean_t4}, {std_t4}')
 
 plt.tight_layout()
 
-# Define frequency bands
 freq_bands = {'Delta': (1, 4), 'Theta': (4, 8), 'Alpha': (8, 13), 'Beta': (14, 30), 'Gamma': (30, 50)}
 
-# Bar histogram plot for F7 electrode
+mean_amplitudes_f7 = []
+mean_amplitudes_t4 = []
+
 fig, ax = plt.subplots(figsize=(10, 6))
-for band, (f_low, f_high) in freq_bands.items():
+colors = plt.cm.viridis(np.linspace(0, 1, len(freq_bands)))
+
+for color, (band, (f_low, f_high)) in zip(colors, freq_bands.items()):
     indices_f7 = np.where((frequencies_f7 >= f_low) & (frequencies_f7 <= f_high))
     avg_amplitude_f7 = np.mean(psd_f7[indices_f7])
-    ax.bar(f_low, avg_amplitude_f7, width=f_high - f_low, alpha=0.7, label=f'F7 - {band}')
+    mean_amplitudes_f7.append(avg_amplitude_f7)
 
-plt.xlabel('Frequency (Hz)')
+ax.bar(freq_bands.keys(), mean_amplitudes_f7, alpha=0.7, color=colors, label='F7')
+
+highlight_bands = ['Beta', 'Gamma']
+for bar, band, color in zip(ax.patches, freq_bands.keys(), colors):
+    if band in highlight_bands:
+        bar.set_facecolor('red')
+
+plt.xlabel('Frequency Band')
 plt.ylabel('Average Amplitude')
 plt.title('Average Amplitude in Different Frequency Bands - F7 Electrode')
 plt.legend()
-plt.show()
 
-# Bar histogram plot for T4 electrode
 fig, ax = plt.subplots(figsize=(10, 6))
-for band, (f_low, f_high) in freq_bands.items():
+for color, (band, (f_low, f_high)) in zip(colors, freq_bands.items()):
     indices_t4 = np.where((frequencies_t4 >= f_low) & (frequencies_t4 <= f_high))
     avg_amplitude_t4 = np.mean(psd_t4[indices_t4])
-    ax.bar(f_low, avg_amplitude_t4, width=f_high - f_low, alpha=0.7, label=f'T4 - {band}')
+    mean_amplitudes_t4.append(avg_amplitude_t4)
 
-plt.xlabel('Frequency (Hz)')
+ax.bar(freq_bands.keys(), mean_amplitudes_t4, alpha=0.7, color=colors, label='T4')
+
+for bar, band, color in zip(ax.patches, freq_bands.keys(), colors):
+    if band in highlight_bands:
+        bar.set_facecolor('red')
+
+plt.xlabel('Frequency Band')
 plt.ylabel('Average Amplitude')
 plt.title('Average Amplitude in Different Frequency Bands - T4 Electrode')
 plt.legend()
+
 plt.show()
