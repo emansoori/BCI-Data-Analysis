@@ -59,6 +59,11 @@ ax1.legend()
 beta_low, beta_high = freq_bands['Beta']
 ax1.axvline(x=beta_low, color='green', linestyle='--', label='Beta Region')
 ax1.axvline(x=beta_high, color='green', linestyle='--')
+ax1.axvline(x=8, color='green', linestyle='--')
+ax1.axvline(x=100, color='green', linestyle='--', label='Additional Line at 100 Hz')
+ax1.text(18, 30e-5, 'Motor\nImagery\nPeriod', fontsize=12, color='black')
+ax1.text(45, 45e-5, 'Still focusd but not Motor Imagery Period', fontsize=12, color='black')
+
 
 mean_f7, std_f7 = np.mean(F7_Electrode[:, 0]), np.std(F7_Electrode[:, 0])
 mean_t4, std_t4 = np.mean(T4_Electrode[:, 0]), np.std(T4_Electrode[:, 0])
